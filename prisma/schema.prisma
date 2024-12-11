@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Patient {
+  patientid    Int     @id @default(autoincrement())
+  baseaddress  String
+  height       Int
+  weight       Int
+  birthdate    DateTime
+  name         String
+  images       Image[]
+  practitioner Practitioner @relation(fields: [practitionerid], references: [practitionerid])
+  practitionerid Int
+}
+
+model Image {
+  imageid        Int     @id @default(autoincrement())
+  beforeImageCid String
+  afterImageCid  String?
+  afterImageUploaded Boolean @default(false)
+  patientid      Int
+  patient        Patient @relation(fields: [patientid], references: [patientid])
+}
+
+model Practitioner {
+  practitionerid Int     @id @default(autoincrement())
+  baseaddress    String
+  starrating     Int
+  name           String
+  patients       Patient[]
+}
+
+
