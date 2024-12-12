@@ -23,6 +23,7 @@ const LandingPage = () => {
         router.push('/register');
       }
     } catch (err) {
+      console.error(err);
       router.push('/register');
     }
   };

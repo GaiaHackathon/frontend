@@ -27,6 +27,7 @@ export async function GET(request: Request) {
 
     return Response.json({ found: false });
   } catch (err) {
+    console.error(err);
     return Response.json({ message: 'User not found' }, { status: 404 });
   }
 }

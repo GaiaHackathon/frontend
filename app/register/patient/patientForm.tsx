@@ -76,12 +76,11 @@ export default function PatientRegistrationForm() {
         }),
       });
 
-      console.log(response);
-
       if (response.status === 200) {
         router.push('/patient');
       }
     } catch (err) {
+      console.error(err);
       alert('Ran into issue check submission values');
     }
   }

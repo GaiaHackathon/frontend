@@ -44,6 +44,7 @@ export default function PractitionerRegistrationForm() {
         router.push('/practitioner');
       }
     } catch (err) {
+      console.error(err);
       alert('Ran into issue check submission values');
     }
   }

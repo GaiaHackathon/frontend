@@ -4,7 +4,7 @@ import { FaStar } from 'react-icons/fa6';
 import { FaFileUpload } from 'react-icons/fa';
 import { RiRobot2Fill } from 'react-icons/ri';
 
-export default function () {
+export default function Patient() {
   return (
     <div className='w-screen h-screen flex justify-center items-center'>
       <div className='flex justify-between w-3/4 gap-10'>
