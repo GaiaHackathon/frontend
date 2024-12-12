@@ -2,10 +2,10 @@ import prisma from '@/db';
 
 type Patient = {
   baseaddress: string;
-  height: number;
   weight: number;
-  birthdate: string;
+  age: number;
   name: string;
+  sex: string;
   practitionerId?: number;
 };
 
@@ -14,10 +14,10 @@ export async function POST(request: Request) {
   try {
     const data: Patient = await request.json();
 
-    const { baseaddress, height, weight, birthdate, name, practitionerId } =
-      data;
+    const { baseaddress, name, age, weight, sex, practitionerId } = data;
+    console.log(data);
 
-    if (!baseaddress || !height || !weight || !birthdate || !name) {
+    if (!baseaddress || !weight || !age || !name || !sex) {
       return new Response(
         JSON.stringify({ message: 'Missing required fields' }),
         {
@@ -30,10 +30,10 @@ export async function POST(request: Request) {
     await prisma.patient.create({
       data: {
         baseaddress,
-        height,
         weight,
-        birthdate: new Date(birthdate),
+        age,
         name,
+        sex,
         practitionerid: practitionerId,
       },
     });

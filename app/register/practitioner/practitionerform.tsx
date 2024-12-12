@@ -13,6 +13,8 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { useRouter } from 'next/navigation';
+import { useAccount } from 'wagmi';
 
 const formSchema = z.object({
   name: z
@@ -22,17 +24,28 @@ const formSchema = z.object({
 });
 
 export default function PractitionerRegistrationForm() {
+  const { address } = useAccount();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
     },
   });
+  const router = useRouter();
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    alert(JSON.stringify(values));
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const response = await fetch('/api/practitioner/register', {
+        method: 'POST',
+        body: JSON.stringify({ baseaddress: address, name: values.name }),
+      });
+
+      if (response.status === 200) {
+        router.push('/practitioner');
+      }
+    } catch (err) {
+      alert('Ran into issue check submission values');
+    }
   }
 
   return (

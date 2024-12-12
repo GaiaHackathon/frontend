@@ -7,6 +7,7 @@ type Practitioner = {
 
 export async function POST(request: Request) {
   const res: Practitioner = await request.json();
+  console.log(res);
 
   if (!res.baseaddress || !res.name) {
     return Response.json(

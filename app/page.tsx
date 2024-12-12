@@ -1,19 +1,13 @@
 'use client';
 
 import { midnightTheme } from '@rainbow-me/rainbowkit';
-import { getDefaultConfig, RainbowKitProvider } from '@rainbow-me/rainbowkit';
+import { RainbowKitProvider } from '@rainbow-me/rainbowkit';
 import { WagmiProvider } from 'wagmi';
 import { base } from 'wagmi/chains';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import '@rainbow-me/rainbowkit/styles.css';
 import LandingPage from './landingPage';
-
-const config = getDefaultConfig({
-  appName: 'GaiaHackathonApp',
-  projectId: '92668f549afe0667d23f664820809418',
-  chains: [base],
-  ssr: true, // If your dApp uses server side rendering (SSR)
-});
+import config from '@/wagmi';
 
 export default function Home() {
   const queryClient = new QueryClient();

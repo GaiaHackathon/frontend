@@ -10,10 +10,10 @@ datasource db {
 model Patient {
   patientid    Int     @id @default(autoincrement())
   baseaddress  String
-  height       Int
   weight       Int
-  birthdate    DateTime
+  age          Int
   name         String
+  sex          String
   images       Image[]
   practitioner Practitioner? @relation(fields: [practitionerid], references: [practitionerid])
   practitionerid Int?

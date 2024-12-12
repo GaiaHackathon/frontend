@@ -20,6 +20,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { useRouter } from 'next/navigation';
+import { useAccount } from 'wagmi';
 
 const formSchema = z.object({
   name: z
@@ -54,18 +56,34 @@ const formSchema = z.object({
 });
 
 export default function PatientRegistrationForm() {
+  const { address } = useAccount();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
-      weight: 150,
     },
   });
+  const router = useRouter();
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    // Do something with the form values.
-    // ✅ This will be type-safe and validated.
-    alert(JSON.stringify(values));
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    try {
+      const response = await fetch('/api/patient/register', {
+        method: 'POST',
+        body: JSON.stringify({
+          baseaddress: address,
+          ...values,
+          practitionerid: 1,
+        }),
+      });
+
+      console.log(response);
+
+      if (response.status === 200) {
+        router.push('/patient');
+      }
+    } catch (err) {
+      alert('Ran into issue check submission values');
+    }
   }
 
   return (
@@ -85,7 +103,7 @@ export default function PatientRegistrationForm() {
               <FormControl>
                 <Input
                   className='text-white placeholder:text-gray-300'
-                  placeholder='John Doe'
+                  placeholder='Enter name'
                   {...field}
                 />
               </FormControl>
@@ -101,20 +119,13 @@ export default function PatientRegistrationForm() {
               <FormLabel className='text-white text-base font-bold'>
                 Age
               </FormLabel>
-              <Select onValueChange={field.onChange}>
-                <FormControl>
-                  <SelectTrigger className='text-white'>
-                    <SelectValue placeholder='Select your age' />
-                  </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {Array.from({ length: 121 }, (_, i) => i).map((num) => (
-                    <SelectItem key={num} value={num.toString()}>
-                      {num}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <FormControl>
+                <Input
+                  className='text-white placeholder:text-gray-300'
+                  placeholder='Enter age'
+                  {...field}
+                />
+              </FormControl>
               <FormMessage />
             </FormItem>
           )}
@@ -129,7 +140,7 @@ export default function PatientRegistrationForm() {
               </FormLabel>
               <FormControl>
                 <Input
-                  className='text-white'
+                  className='text-white placeholder:text-gray-300'
                   placeholder='Enter weight in lbs'
                   {...field}
                 />
@@ -148,7 +159,7 @@ export default function PatientRegistrationForm() {
               </FormLabel>
               <Select onValueChange={field.onChange}>
                 <FormControl>
-                  <SelectTrigger className='text-white'>
+                  <SelectTrigger className='text-gray-300'>
                     <SelectValue placeholder='Choose gender' />
                   </SelectTrigger>
                 </FormControl>
