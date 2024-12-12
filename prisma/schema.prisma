@@ -17,7 +17,7 @@ model Patient {
   // images       Image[]
   practitioner Practitioner? @relation(fields: [practitionerid], references: [practitionerid])
   practitionerid Int?
-  // ratings       Rating[]
+  ratings       Rating[]
 }
 
 // model Image {
@@ -34,14 +34,14 @@ model Practitioner {
   baseaddress    String
   name           String
   patients       Patient[]
-  // ratings        Rating[]
+  ratings        Rating[]
 }
 
-// model Rating {
-//   ratingid Int @id @default(autoincrement())
-//   Patient Patient @relation(fields: [patientid], references: [patientid])
-//   patientid Int
-//   rating Int
-//   Practitioner Practitioner @relation(fields: [practitionerid], references: [practitionerid])
-//   practitionerid Int
-// }
+model Rating {
+  ratingid Int @id @default(autoincrement())
+  Patient Patient @relation(fields: [patientid], references: [patientid])
+  patientid Int
+  rating Int
+  Practitioner Practitioner @relation(fields: [practitionerid], references: [practitionerid])
+  practitionerid Int
+}

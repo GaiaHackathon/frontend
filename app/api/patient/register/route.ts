@@ -10,9 +10,9 @@ type Patient = {
 };
 
 // create post route
-export async function POST(req: Request) {
+export async function POST(request: Request) {
   try {
-    const data: Patient = await req.json();
+    const data: Patient = await request.json();
 
     const { baseaddress, height, weight, birthdate, name, practitionerId } =
       data;

@@ -1,33 +1,36 @@
-// // Import everything needed for nextjs api route
-// import type { NextApiRequest, NextApiResponse } from 'next';
-// import { PrismaClient } from '@prisma/client';
+import prisma from '@/db';
 
-// interface RatingData {
-//   patientId: number;
-//   rating: number;
-//   practionerId: number;
-// }
+type Rating = {
+  patientid: number;
+  rating: number;
+  practitionerid: number;
+};
 
-// // create post route
-// export default async function handler(
-//   req: NextApiRequest,
-//   res: NextApiResponse
-// ) {
-//   if (req.method === 'POST') {
-//     const data: RatingData = req.body;
+export async function POST(request: Request) {
+  const data: Rating = await request.json();
 
-//     if (!data || !data.rating || !data.practionerId || !data.patientId) {
-//       return res.status(400).json({ message: 'Missing required fields' });
-//     }
-//     // create prisma client
-//     const prisma = new PrismaClient();
+  if (!data.rating || !data.practitionerid || !data.patientid) {
+    return Response.json(
+      { message: 'Missing required fields' },
+      { status: 400 }
+    );
+  }
 
-//     // create rating
-//     const rating = await prisma.rating.create({
-//       data: {},
-//     });
-//     res.status(200).json(rating);
-//   } else {
-//     res.status(400).json({ message: 'Invalid request method' });
-//   }
-// }
+  try {
+    const rating = await prisma.rating.create({
+      data: {
+        patientid: data.patientid,
+        practitionerid: data.practitionerid,
+        rating: data.rating,
+      },
+    });
+
+    return Response.json(rating);
+  } catch (err) {
+    console.error(err);
+    return Response.json(
+      { message: 'Error trying to save rating' },
+      { status: 500 }
+    );
+  }
+}
