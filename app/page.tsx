@@ -1,16 +1,11 @@
 'use client';
 
-import {
-  ConnectButton,
-  darkTheme,
-  midnightTheme,
-} from '@rainbow-me/rainbowkit';
+import { midnightTheme } from '@rainbow-me/rainbowkit';
 import { getDefaultConfig, RainbowKitProvider } from '@rainbow-me/rainbowkit';
-import { useAccount, WagmiProvider } from 'wagmi';
+import { WagmiProvider } from 'wagmi';
 import { base } from 'wagmi/chains';
 import { QueryClientProvider, QueryClient } from '@tanstack/react-query';
 import '@rainbow-me/rainbowkit/styles.css';
-import { useRouter } from 'next/router';
 import LandingPage from './landingPage';
 
 const config = getDefaultConfig({
