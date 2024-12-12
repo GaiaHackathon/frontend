@@ -14,20 +14,20 @@ model Patient {
   weight       Int
   birthdate    DateTime
   name         String
-  // images       Image[]
+  images       Image[]
   practitioner Practitioner? @relation(fields: [practitionerid], references: [practitionerid])
   practitionerid Int?
   ratings       Rating[]
 }
 
-// model Image {
-//   imageid        Int     @id @default(autoincrement())
-//   beforeImageCid String
-//   afterImageCid  String?
-//   afterImageUploaded Boolean @default(false)
-//   patientid      Int
-//   patient        Patient @relation(fields: [patientid], references: [patientid])
-// }
+model Image {
+  imageid        Int     @id @default(autoincrement())
+  beforeImageCid String
+  afterImageCid  String?
+  afterImageUploaded Boolean @default(false)
+  patientid      Int
+  patient        Patient @relation(fields: [patientid], references: [patientid])
+}
 
 model Practitioner {
   practitionerid Int     @id @default(autoincrement())
