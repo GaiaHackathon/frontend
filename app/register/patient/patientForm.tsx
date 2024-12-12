@@ -84,7 +84,7 @@ export default function PatientRegistrationForm() {
               </FormLabel>
               <FormControl>
                 <Input
-                  className='text-white placeholder:text-gray-200'
+                  className='text-white placeholder:text-gray-300'
                   placeholder='John Doe'
                   {...field}
                 />
