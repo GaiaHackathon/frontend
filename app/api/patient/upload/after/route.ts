@@ -18,12 +18,12 @@ export async function POST(request: Request) {
 
     const createdImage = await prisma.image.update({
       where: {
-        imageid: Number(formData.get('imageid')),
+        imageid: Number(1),
       },
       data: {
         afterImageCid: cid.toString(),
         afterImageUploaded: true,
-        patientid: Number(formData.get('patientid')),
+        patientid: 1,
       },
     });
 

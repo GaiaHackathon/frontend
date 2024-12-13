@@ -6,7 +6,7 @@ import prisma from '@/db';
 
 export async function POST(request: Request) {
   const formData = await request.formData();
-  console.log(formData);
+
   try {
     const principal = Signer.parse(process.env.WEB3_STORAGE_KEY!);
     const store = new StoreMemory();
