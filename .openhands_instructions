@@ -1,0 +1,83 @@
+Repository: Result Based Health Blockchain Superintelligence
+Description: A blockchain based web portal where patients can upload their before and after pictures of their health progress. The AI agent will then analyze the pictures and provide a rating.
+It currently uses web3.storage to store the pictures and Grok Vision to rate the picture and SQLite to store the data.
+
+Directory Structure:
+frontend/
+  .openhands_instructions : Your instruction file
+  README.md : Readme
+  components.json
+  db.ts
+  next.config.ts
+  package.json
+  postcss.config.mjs
+  tailwind.config.ts
+  tsconfig.json
+  wagmi.ts
+  prisma/
+    schema.prisma : SQlite database schema made with prisma
+    migrations/
+      migration_lock.toml
+      20241212220259_init/
+        migration.sql
+      20241212214638_init/
+        migration.sql
+      20241212213900_init/
+        migration.sql
+  lib/
+    utils.ts
+  components/
+    ui/ : UI Components
+      badge.tsx
+      button.tsx
+      card.tsx
+      form.tsx
+      input.tsx
+      label.tsx
+      select.tsx
+  app/
+    globals.css
+    landingPage.tsx
+    layout.tsx
+    page.tsx
+    upload/
+      page.tsx : Upload page for pictures
+    register/
+      page.tsx : Register page for users
+      practitioner/ : Register page for practitioners
+        page.tsx
+        practitionerform.tsx
+      patient/ : Register page for patients
+        page.tsx
+        patientForm.tsx
+    practitioner/
+      page.tsx
+    patient/
+      page.tsx
+    api/
+      user/
+        route.ts : Route for user API
+      practitioner/
+        register/ : Route for registering a practitioner
+          route.ts
+      patient/
+        upload/
+          before/ : Route for uploading a before picture
+            route.ts
+          after/ : Route for uploading an after picture
+            route.ts
+        register/
+          route.ts
+        rate/   : Route for rating a practitioner
+          route.ts
+      agent/
+        route.ts : Route for analyzing an before and after picture pair with an AI agent
+
+Setup:
+- Run `npm ci` to install dependencies
+- Use `npm run dev` for development
+
+Guidelines:
+- Follow ESLint configuration
+- Write tests for all new features
+- Use TypeScript for new code
