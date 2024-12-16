@@ -16,10 +16,29 @@ export async function POST(request: Request) {
     await client.setCurrentSpace(space.did());
     const cid = await client.uploadFile(formData.get('image') as File);
 
+    // Get the patient ID from the baseaddress
+    const patient = await prisma.patient.findFirst({
+      where: {
+        baseaddress: formData.get('baseaddress') as string,
+      },
+    });
+
+    if (!patient) {
+      return new Response(
+        JSON.stringify({ message: 'Patient not found' }),
+        {
+          status: 404,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
     const createdImage = await prisma.image.create({
       data: {
         beforeImageCid: cid.toString(),
-        patientid: 1,
+        patientid: patient.patientid,
+        description: formData.get('description') as string || null,
+        analysis: null, // Will be updated when after image is uploaded
       },
     });
 
