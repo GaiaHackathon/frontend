@@ -44,7 +44,6 @@ export async function POST(request: Request) {
       );
     }
 
-    const analysis = formData.get('analysis') as string;
     const createdImage = await prisma.image.update({
       where: {
         imageid: Number(imageId),
@@ -53,7 +52,7 @@ export async function POST(request: Request) {
       data: {
         afterImageCid: cid.toString(),
         afterImageUploaded: true,
-        analysis: analysis || null,
+        analysis: null,
       },
     });
 

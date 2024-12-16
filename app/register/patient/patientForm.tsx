@@ -28,36 +28,36 @@ const formSchema = z.object({
     .string()
     .min(1, { message: 'Name is required' })
     .max(100, { message: 'Name must be 100 characters or less' }),
-  age: z.preprocess((value) => {
+  age: z.preprocess((value: string) => {
     if (typeof value === 'string') {
       const parsed = parseInt(value, 10);
       return isNaN(parsed) ? undefined : parsed;
     }
     return value;
   }, z.number().int().min(0, { message: 'Age must be a positive number' }).max(120, { message: 'Age must be realistic' })),
-  weight: z.preprocess((value) => {
+  weight: z.preprocess((value: string) => {
     if (typeof value === 'string') {
       const parsed = parseFloat(value);
       return isNaN(parsed) ? undefined : parsed;
     }
     return value;
   }, z.number().min(0, { message: 'Weight must be a positive number' })),
-  height: z.preprocess((value) => {
+  height: z.preprocess((value: string) => {
     if (typeof value === 'string') {
       const parsed = parseFloat(value);
       return isNaN(parsed) ? undefined : parsed;
     }
     return value;
   }, z.number().min(0, { message: 'Height must be a positive number' })),
-  fatPercentage: z.preprocess((value) => {
+  fatPercentage: z.preprocess((value: string) => {
     if (typeof value === 'string') {
       const parsed = parseFloat(value);
       return isNaN(parsed) ? undefined : parsed;
     }
     return value;
-  }, z.number().min(0, { message: 'Body fat percentage must be a positive number' }).max(100, { message: 'Body fat percentage must be less than 100' }).optional().nullable(),
+  }, z.number().min(0, { message: 'Body fat percentage must be a positive number' }).max(100, { message: 'Body fat percentage must be less than 100' }).optional().nullable()),
   sex: z.preprocess(
-    (value) => {
+    (value: string) => {
       if (typeof value === 'string') {
         return value.toLowerCase();
       }
@@ -75,6 +75,11 @@ export default function PatientRegistrationForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
+      age: '',
+      weight: '',
+      height: '',
+      fatPercentage: '',
+      sex: '',
     },
   });
   const router = useRouter();

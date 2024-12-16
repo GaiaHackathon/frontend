@@ -7,6 +7,8 @@ import { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAccount } from 'wagmi';
 import { useRouter } from 'next/navigation';
+import React, { useEffect } from 'react';
+
 
 const validateImageFile = (file: File | null, inputElement: HTMLInputElement): boolean => {
   if (!file) return true;
@@ -147,7 +149,7 @@ export default function Upload() {
         updateFormData.append('imageId', beforeData.createdImage.imageid.toString());
         updateFormData.append('analysis', analysisText);
         
-        const updateResp = await fetch('/api/patient/upload/after', {
+        const updateResp = await fetch('/api/patient/upload/analysis', {
           method: 'POST',
           body: updateFormData,
         });
