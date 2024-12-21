@@ -17,7 +17,7 @@ interface Patient {
   fatPercentage: number | null;
   age: number;
   name: string;
-  sex: string;
+  sex: 'male' | 'female' | 'other';
   images: {
     imageid: number;
     beforeImageCid: string;
