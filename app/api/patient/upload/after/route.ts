@@ -63,8 +63,7 @@ export async function POST(request: Request) {
       },
       data: {
         afterImageCid: cid.toString(),
-        afterImageUploaded: true,
-        analysis: null,
+        afterImageUploaded: true
       },
     });
 
