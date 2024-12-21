@@ -11,7 +11,7 @@ model Patient {
   patientid    Int     @id @default(autoincrement())
   baseaddress  String
   weight       Int
-  height       Float
+  height       Float? @default(170.0)
   fatPercentage Float?
   age          Int
   name         String
