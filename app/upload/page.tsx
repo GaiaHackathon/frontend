@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
 import Image from 'next/image';
 
-const validateImageFile = (file: File | null, inputElement: HTMLInputElement): boolean => {
+const validateImageFile = (file: File | undefined, inputElement: HTMLInputElement): boolean => {
   if (!file) return true;
 
   if (!file.type.startsWith('image/')) {
@@ -32,8 +32,8 @@ const validateImageFile = (file: File | null, inputElement: HTMLInputElement): b
 export default function Upload() {
   const { address } = useAccount();
   const router = useRouter();
-  const [beforeFile, setBeforeFile] = useState(null);
-  const [afterFile, setAfterFile] = useState(null);
+  const [beforeFile, setBeforeFile] = useState<File | null>(null);
+  const [afterFile, setAfterFile] = useState<File | null>(null);
   const [description, setDescription] = useState('');
   const [beforeImageSrc, setBeforeImageSrc] = useState<string>();
   const [afterImageSrc, setAfterImageSrc] = useState<string>();
