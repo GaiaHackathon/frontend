@@ -6,10 +6,21 @@ const openai = new OpenAI({
 });
 
 export async function POST(req: Request) {
-  const data = await req.json();
-  const { before_url, after_url } = data;
+  let data;
+  try {
+    data = await req.json();
+  } catch (error) {
+    return new Response(
+      JSON.stringify({ error: 'Invalid JSON in request body' }),
+      {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
+  }
 
-  if (!before_url) {
+  // Ensure `before_url` is present
+  if (!data.before_url) {
     return new Response(
       JSON.stringify({ error: 'Before image URL is required' }),
       {
@@ -18,6 +29,7 @@ export async function POST(req: Request) {
       }
     );
   }
+  const { before_url, after_url } = data;
 
   let prompt = 'Analyze this image for posture and spine alignment.';
   let images = [before_url];
