@@ -181,7 +181,7 @@ export default function PatientRegistrationForm() {
           render={({ field }) => (
             <FormItem>
               <FormLabel className='text-white text-base font-bold'>
-                Height
+                Height (cm)
               </FormLabel>
               <FormControl>
                 <Input
