@@ -68,7 +68,15 @@ export default function Patient() {
   }, [address, retryCount]);
 
   if (loading) {
-    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+    return (
+      <div className="flex justify-center items-center h-screen">Loading...</div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex justify-center items-center h-screen">Error: {error}: Retrying...</div>
+    );
   }
 
   if (!address) {
