@@ -11,13 +11,18 @@ export function WagmiClientProvider({ children }: { children: ReactNode }) {
   const [config, setConfig] = useState<Config | null>(null); // Set the type to Config | null
   useEffect(() => {
     const setupConfig = async () => {
-      const cfg = getDefaultConfig({
-        appName: 'GaiaHackathonApp',
-        projectId: '92668f549afe0667d23f664820809418',
-        chains: [base],
-        ssr: true,
-      });
-      setConfig(cfg);
+      try {
+        const cfg = getDefaultConfig({
+          appName: 'GaiaHackathonApp',
+          projectId: '92668f549afe0667d23f664820809418',
+          chains: [base],
+          ssr: true,
+        });
+        setConfig(cfg);
+      } catch (error) {
+        console.error('Failed to initialize Wagmi config:', error);
+        // Consider showing an error UI state
+      }
     };
 
     setupConfig();
