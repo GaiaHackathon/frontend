@@ -44,6 +44,17 @@ export async function POST(request: Request) {
       );
     }
 
+    // check if image id is a number
+    if (isNaN(Number(imageId))) {
+      return new Response(
+        JSON.stringify({ message: 'Image ID is not a number' }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
     const createdImage = await prisma.image.update({
       where: {
         imageid: Number(imageId),
