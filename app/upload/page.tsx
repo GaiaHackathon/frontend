@@ -12,21 +12,22 @@ import Image from 'next/image';
 
 const validateImageFile = (file: File | null, inputElement: HTMLInputElement): boolean => {
   if (!file) return true;
-  
+
   if (!file.type.startsWith('image/')) {
     alert('Please select an image file');
     inputElement.value = '';
     return false;
   }
-  
+
   if (file.size > 5 * 1024 * 1024) {
     alert('Image size must be less than 5MB');
     inputElement.value = '';
     return false;
   }
-  
+
   return true;
 };
+
 
 export default function Upload() {
   const { address } = useAccount();

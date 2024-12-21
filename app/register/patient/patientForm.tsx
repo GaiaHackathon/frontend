@@ -28,36 +28,48 @@ const formSchema = z.object({
     .string()
     .min(1, { message: 'Name is required' })
     .max(100, { message: 'Name must be 100 characters or less' }),
-  age: z.preprocess((value: string) => {
-    if (typeof value === 'string') {
-      const parsed = parseInt(value, 10);
-      return Number.isNaN(parsed) ? undefined : parsed;
-    }
-    return value;
-  }, z.number().int().min(0, { message: 'Age must be a positive number' }).max(120, { message: 'Age must be realistic' })),
-  weight: z.preprocess((value: string) => {
-    if (typeof value === 'string') {
-      const parsed = parseFloat(value);
-      return Number.isNaN(parsed) ? undefined : parsed;
-    }
-    return value;
-  }, z.number().min(0, { message: 'Weight must be a positive number' })),
-  height: z.preprocess((value: string) => {
-    if (typeof value === 'string') {
-      const parsed = parseFloat(value);
-      return Number.isNaN(parsed) ? undefined : parsed;
-    }
-    return value;
-  }, z.number().min(0, { message: 'Height must be a positive number' })),
-  fatPercentage: z.preprocess((value: string) => {
-    if (typeof value === 'string') {
-      const parsed = parseFloat(value);
-      return Number.isNaN(parsed) ? undefined : parsed;
-    }
-    return value;
-  }, z.number().min(0, { message: 'Body fat percentage must be a positive number' }).max(100, { message: 'Body fat percentage must be less than 100' }).optional().nullable()),
+  age: z.preprocess(
+    (value) => {
+      if (typeof value === 'string') {
+        const parsed = parseInt(value, 10);
+        return Number.isNaN(parsed) ? undefined : parsed;
+      }
+      return value;
+    },
+    z.number().int().min(0, { message: 'Age must be a positive number' }).max(120, { message: 'Age must be realistic' })
+  ),
+  weight: z.preprocess(
+    (value) => {
+      if (typeof value === 'string') {
+        const parsed = parseFloat(value);
+        return Number.isNaN(parsed) ? undefined : parsed;
+      }
+      return value;
+    },
+    z.number().min(0, { message: 'Weight must be a positive number' })
+  ),
+  height: z.preprocess(
+    (value) => {
+      if (typeof value === 'string') {
+        const parsed = parseFloat(value);
+        return Number.isNaN(parsed) ? undefined : parsed;
+      }
+      return value;
+    },
+    z.number().min(0, { message: 'Height must be a positive number' })
+  ),
+  fatPercentage: z.preprocess(
+    (value) => {
+      if (typeof value === 'string') {
+        const parsed = parseFloat(value);
+        return Number.isNaN(parsed) ? undefined : parsed;
+      }
+      return value;
+    },
+    z.number().min(0, { message: 'Body fat percentage must be a positive number' }).max(100, { message: 'Body fat percentage must be less than 100' }).optional().nullable()
+  ),
   sex: z.preprocess(
-    (value: string) => {
+    (value) => {
       if (typeof value === 'string') {
         return value.toLowerCase();
       }
@@ -69,17 +81,18 @@ const formSchema = z.object({
   ),
 });
 
+
 export default function PatientRegistrationForm() {
   const { address } = useAccount();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
-      age: '',
-      weight: '',
-      height: '',
-      fatPercentage: '',
-      sex: '',
+      age: 0,
+      weight: 0,
+      height: 0,
+      fatPercentage: 0,
+      sex: 'other',
     },
   });
   const router = useRouter();
@@ -194,6 +207,8 @@ export default function PatientRegistrationForm() {
             </FormItem>
           )}
         />
+
+
         <FormField
           control={form.control}
           name='fatPercentage'
@@ -207,6 +222,7 @@ export default function PatientRegistrationForm() {
                   className='text-white placeholder:text-gray-300'
                   placeholder='Enter body fat percentage'
                   {...field}
+                  value={field.value != null ? field.value.toString() : ''} // Ensure value is a string
                 />
               </FormControl>
               <FormMessage />
