@@ -32,6 +32,8 @@ export default function Patient() {
   const { address } = useAccount();
   const [patient, setPatient] = useState<Patient | null>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
 
   useEffect(() => {
     const fetchPatientData = async () => {
@@ -41,15 +43,21 @@ export default function Patient() {
       }
 
       try {
+        setError(null);
         const response = await fetch(`/api/patient/data?baseaddress=${address}`);
         if (response.ok) {
           const data = await response.json();
           setPatient(data);
-        } else if (response.status === 404) {
-          // Patient not found, they need to register
-          console.log('Patient not found');
+        } else {
+          throw new Error(response.status === 404 ? 'Patient profile not found' : 'Failed to fetch patient data');
         }
       } catch (error) {
+        setError(error instanceof Error ? error.message : 'An error occurred');
+        if (retryCount < 3) {
+          setTimeout(() => {
+            setRetryCount(prev => prev + 1);
+          }, 1000 * Math.pow(2, retryCount));
+        }
         console.error('Error fetching patient data:', error);
       } finally {
         setLoading(false);
@@ -57,7 +65,7 @@ export default function Patient() {
     };
 
     fetchPatientData();
-  }, [address]);
+  }, [address, retryCount]);
 
   if (loading) {
     return <div className="flex justify-center items-center h-screen">Loading...</div>;
