@@ -23,29 +23,25 @@ import {
 import { useRouter } from 'next/navigation';
 import { useAccount } from 'wagmi';
 
+ const preprocessNumber = (parser: typeof Number.parseInt | typeof Number.parseFloat) => (value: unknown) => {
+   if (typeof value === 'string') {
+     const parsed = parser(value, 10);
+     return Number.isNaN(parsed) ? undefined : parsed;
+   }
+   return value;
+ };
+
 const formSchema = z.object({
   name: z
     .string()
     .min(1, { message: 'Name is required' })
     .max(100, { message: 'Name must be 100 characters or less' }),
   age: z.preprocess(
-    (value) => {
-      if (typeof value === 'string') {
-        const parsed = parseInt(value, 10);
-        return Number.isNaN(parsed) ? undefined : parsed;
-      }
-      return value;
-    },
+    preprocessNumber(Number.parseInt),
     z.number().int().min(0, { message: 'Age must be a positive number' }).max(120, { message: 'Age must be realistic' })
   ),
   weight: z.preprocess(
-    (value) => {
-      if (typeof value === 'string') {
-        const parsed = parseFloat(value);
-        return Number.isNaN(parsed) ? undefined : parsed;
-      }
-      return value;
-    },
+    preprocessNumber(Number.parseFloat),
     z.number().min(0, { message: 'Weight must be a positive number' })
   ),
   height: z.preprocess(
@@ -91,7 +87,7 @@ export default function PatientRegistrationForm() {
       age: 0,
       weight: 0,
       height: 0,
-      fatPercentage: 0,
+      fatPercentage: null,
       sex: 'other',
     },
   });
@@ -107,8 +103,8 @@ export default function PatientRegistrationForm() {
         body: JSON.stringify({
           baseaddress: address,
           ...values,
-          height: parseFloat(values.height.toString()),
-          fatPercentage: values.fatPercentage ? parseFloat(values.fatPercentage.toString()) : null,
+          height: values.height,
+          fatPercentage: values.fatPercentage,
           practitionerid: 1,
         }),
       });

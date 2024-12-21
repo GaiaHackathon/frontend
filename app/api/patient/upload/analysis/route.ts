@@ -8,10 +8,27 @@ export async function POST(request: Request) {
     const baseaddress = formData.get('baseaddress') as string;
     const imageId = formData.get('imageId') as string;
     const analysis = formData.get('analysis') as string;
+
+    if (!baseaddress || !imageId || !analysis) {
+      return new Response(
+        JSON.stringify({ message: 'Missing required fields: baseaddress, imageId, and analysis are required.' }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
     // Validate analysis content
     if (analysis.length > 10000) { // adjust max length as needed
       return new Response(
         JSON.stringify({ message: 'Analysis content exceeds maximum length' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    if (analysis.length < 1) {
+      return new Response(
+        JSON.stringify({ message: 'Analysis content is required' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
@@ -26,15 +43,7 @@ export async function POST(request: Request) {
       );
     }
 
-    if (!baseaddress || !imageId || !analysis) {
-      return new Response(
-        JSON.stringify({ message: 'Missing required fields: baseaddress, imageId, and analysis are required.' }),
-        {
-          status: 400,
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
-    }
+
 
     const patient = await prisma.patient.findFirst({
       where: {

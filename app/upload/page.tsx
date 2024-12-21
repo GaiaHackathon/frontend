@@ -148,7 +148,10 @@ export default function Upload() {
         const updatedAgentData = await updatedAgentResp.json();
         analysisText = updatedAgentData.message.content;
         setAnalysis(analysisText);
-
+        if (!afterFile || !address) {
+          alert("Missing required data for before image upload.");
+          return;
+        }
         // Finally, update the analysis in the database
         const updateFormData = new FormData();
         updateFormData.append('baseaddress', address!);

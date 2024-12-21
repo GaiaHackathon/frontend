@@ -20,14 +20,14 @@ export async function POST(request: Request) {
     // check if description is null
     if (description === null) {
       return new Response(
-        JSON.stringify({ message: 'Description is required.' }),
+        JSON.stringify({ error: 'Description is required.' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
     // check if baseaddress not null
     if (!formData.get('baseaddress')) {
       return new Response(
-        JSON.stringify({ message: 'Baseaddress is required.' }),
+        JSON.stringify({ error: 'Baseaddress is required.' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
@@ -44,13 +44,13 @@ export async function POST(request: Request) {
 
     if (!file || !file.type.startsWith('image/')) {
       return new Response(
-        JSON.stringify({ message: 'Invalid file type. Only images are allowed.' }),
+        JSON.stringify({ error: 'Invalid file type. Only images are allowed.' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
     if (file.size > 5 * 1024 * 1024) { // 5MB limit
       return new Response(
-        JSON.stringify({ message: 'File too large. Maximum size is 5MB.' }),
+        JSON.stringify({ error: 'File too large. Maximum size is 5MB.' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
@@ -66,7 +66,7 @@ export async function POST(request: Request) {
 
     if (!patient) {
       return new Response(
-        JSON.stringify({ message: 'Patient not found' }),
+        JSON.stringify({ error: 'Patient not found' }),
         {
           status: 404,
           headers: { 'Content-Type': 'application/json' },
@@ -90,7 +90,7 @@ export async function POST(request: Request) {
   } catch (err) {
     console.error(err);
     return Response.json(
-      { message: 'Error trying to store image in ipfs' },
+      { error: 'Error trying to store image in ipfs' },
       { status: 500 }
     );
   }
