@@ -14,7 +14,21 @@ export async function POST(request: Request) {
     const proof = await Proof.parse(process.env.WEB3_STORAGE_PROOF!);
     const space = await client.addSpace(proof);
     await client.setCurrentSpace(space.did());
-    const cid = await client.uploadFile(formData.get('image') as File);
+    const file = formData.get('image') as File;
+    if (!file || !file.type.startsWith('image/')) {
+      return new Response(
+        JSON.stringify({ message: 'Invalid file type. Only images are allowed.' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+    if (file.size > 5 * 1024 * 1024) { // 5MB limit
+      return new Response(
+        JSON.stringify({ message: 'File too large. Maximum size is 5MB.' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    const cid = await client.uploadFile(file);
 
     // Get the patient ID from the baseaddress
     const patient = await prisma.patient.findFirst({
