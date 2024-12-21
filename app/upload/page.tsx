@@ -64,7 +64,8 @@ export default function Upload() {
       const beforeFormData = new FormData();
       if(!beforeFile || !address)
       {
-        throw new Error("Missing required data for before image upload.");
+          alert("Missing required data for before image upload.");
+          return; 
       }
       beforeFormData.append('image', beforeFile!);
       beforeFormData.append('description', description);
