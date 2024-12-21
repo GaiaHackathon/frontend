@@ -15,6 +15,33 @@ export async function POST(request: Request) {
     const space = await client.addSpace(proof);
     await client.setCurrentSpace(space.did());
     const file = formData.get('image') as File;
+
+    var description = formData.get('description') as string || null;
+    // check if description is null
+    if (description === null) {
+      return new Response(
+        JSON.stringify({ message: 'Description is required.' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+    // check if baseaddress not null
+    if (!formData.get('baseaddress')) {
+      return new Response(
+        JSON.stringify({ message: 'Baseaddress is required.' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+        // Validation checks for 'description'
+    if (description && description.length > 2000) {
+      return new Response(
+        JSON.stringify({
+          error: 'Description exceeds maximum allowed length of 2000 characters',
+        }),
+        { status: 400 }
+      );
+    }
+
     if (!file || !file.type.startsWith('image/')) {
       return new Response(
         JSON.stringify({ message: 'Invalid file type. Only images are allowed.' }),
@@ -51,7 +78,7 @@ export async function POST(request: Request) {
       data: {
         beforeImageCid: cid.toString(),
         patientid: patient.patientid,
-        description: formData.get('description') as string || null,
+        description: description || null,
         analysis: null, // Will be updated when after image is uploaded
       },
     });
