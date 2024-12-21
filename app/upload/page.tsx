@@ -102,6 +102,9 @@ export default function Upload() {
       const agentData = await agentResp.json();
       let analysisText = agentData.message.content;
       setAnalysis(analysisText);
+      
+      // set before file to null so that the warning is not shown that no upload was saved
+      setBeforeFile(null);
 
       let afterData = null;
       // Upload after image if provided
@@ -160,6 +163,8 @@ export default function Upload() {
         if (!updateResp.ok) {
           throw new Error('Failed to save analysis');
         }
+
+        setAfterFile(null);
       }
 
       // Navigate to patient profile after successful upload
