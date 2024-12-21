@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     const data: Patient = await request.json();
 
 
-    const { baseaddress, name, age, weight, height, fatPercentage,sex, practitionerId } = data;
+    const { baseaddress, name, age, weight, height, fatPercentage, sex, practitionerId } = data;
     console.log(data);
 
     if (!baseaddress || !weight || !age || !name || !sex || !height) {
