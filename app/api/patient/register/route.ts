@@ -15,7 +15,6 @@ type Patient = {
 export async function POST(request: Request) {
   try {
     const data: Patient = await request.json();
-    console.log('Received payload:', data); // Add logging here
 
 
     const { baseaddress, name, age, weight, height, fatPercentage,sex, practitionerId } = data;
@@ -30,7 +29,6 @@ export async function POST(request: Request) {
         }
       );
     }
- console.log('Here');
     await prisma.patient.create({
       data: {
         baseaddress,
