@@ -8,6 +8,23 @@ export async function POST(request: Request) {
     const baseaddress = formData.get('baseaddress') as string;
     const imageId = formData.get('imageId') as string;
     const analysis = formData.get('analysis') as string;
+    // Validate analysis content
+    if (analysis.length > 10000) { // adjust max length as needed
+      return new Response(
+        JSON.stringify({ message: 'Analysis content exceeds maximum length' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    try {
+      // Validate JSON structure if analysis is expected to be JSON
+      JSON.parse(analysis);
+    } catch {
+      return new Response(
+        JSON.stringify({ message: 'Invalid analysis format' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
 
     if (!baseaddress || !imageId || !analysis) {
       return new Response(
