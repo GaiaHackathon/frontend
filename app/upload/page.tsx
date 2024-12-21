@@ -39,7 +39,6 @@ export default function Upload() {
   const [analysis, setAnalysis] = useState<string>();
   const [isUploading, setIsUploading] = useState(false);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [currentImageId, setCurrentImageId] = useState<number>();
 
   // Add confirmation before leaving page with unsaved changes
   useEffect(() => {
@@ -63,6 +62,10 @@ export default function Upload() {
     try {
       // Upload before image
       const beforeFormData = new FormData();
+      if(!beforeFile || !address)
+      {
+        throw new Error("Missing required data for before image upload.");
+      }
       beforeFormData.append('image', beforeFile!);
       beforeFormData.append('description', description);
       beforeFormData.append('baseaddress', address!);
@@ -78,7 +81,6 @@ export default function Upload() {
 
       const beforeData = await beforeResp.json();
       setBeforeImageSrc(beforeData.imageUrl);
-      setCurrentImageId(beforeData.createdImage.imageid);
 
       // Get AI analysis of the before image
       setIsAnalyzing(true);
