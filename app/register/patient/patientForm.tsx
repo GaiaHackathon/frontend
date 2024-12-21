@@ -94,8 +94,8 @@ export default function PatientRegistrationForm() {
         body: JSON.stringify({
           baseaddress: address,
           ...values,
-          height: parseFloat(values.height as any),
-          fatPercentage: values.fatPercentage ? parseFloat(values.fatPercentage as any) : null,
+          height: parseFloat(values.height.toString()),
+          fatPercentage: values.fatPercentage ? parseFloat(values.fatPercentage.toString()) : null,
           practitionerid: 1,
         }),
       });

@@ -1,7 +1,6 @@
 'use client';
 
 import PractitionerRegistrationForm from './practitionerform';
-import config from '@/wagmi';
 
 export default function PatientRegister() {
   return (

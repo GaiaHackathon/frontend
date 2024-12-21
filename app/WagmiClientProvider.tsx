@@ -2,13 +2,13 @@
 "use client"; // Add this line at the top
 
 import { useEffect, useState } from 'react';
-import { WagmiProvider } from 'wagmi';
+import { ReactNode } from 'react'; // Import ReactNode
+import { WagmiProvider, Config } from 'wagmi'; // Import Config type
 import { getDefaultConfig } from '@rainbow-me/rainbowkit';
 import { base } from 'wagmi/chains';
 
-export function WagmiClientProvider({ children }) {
-  const [config, setConfig] = useState(null);
-
+export function WagmiClientProvider({ children }: { children: ReactNode }) {
+  const [config, setConfig] = useState<Config | null>(null); // Set the type to Config | null
   useEffect(() => {
     const setupConfig = async () => {
       const cfg = getDefaultConfig({

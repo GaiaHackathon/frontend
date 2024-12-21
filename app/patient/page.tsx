@@ -8,6 +8,7 @@ import { RiRobot2Fill } from 'react-icons/ri';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { useAccount } from 'wagmi';
+import Image from 'next/image';
 
 interface Patient {
   patientid: number;
@@ -178,13 +179,13 @@ export default function Patient() {
                       <div className='flex flex-col gap-4'>
                         <div className='flex justify-between items-start'>
                           <div className='space-y-4'>
-                            <img 
+                            <Image 
                               src={`https://${image.beforeImageCid}.ipfs.w3s.link`}
                               alt='Before'
                               className='w-full h-48 object-cover rounded'
                             />
                             {image.afterImageCid && (
-                              <img 
+                              <Image 
                                 src={`https://${image.afterImageCid}.ipfs.w3s.link`}
                                 alt='After'
                                 className='w-full h-48 object-cover rounded'

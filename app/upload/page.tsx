@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useAccount } from 'wagmi';
 import { useRouter } from 'next/navigation';
 import React, { useEffect } from 'react';
-
+import Image from 'next/image';
 
 const validateImageFile = (file: File | null, inputElement: HTMLInputElement): boolean => {
   if (!file) return true;
@@ -313,7 +313,7 @@ export default function Upload() {
                   <div className='flex flex-col items-center'>
                     <p className='font-bold mb-2'>Before</p>
                     <div className='w-64 h-64 relative'>
-                      <img 
+                      <Image 
                         src={beforeImageSrc}
                         alt='Before'
                         className='w-full h-full object-cover rounded opacity-0 transition-opacity duration-300'
@@ -331,7 +331,7 @@ export default function Upload() {
                   <div className='flex flex-col items-center'>
                     <p className='font-bold mb-2'>After</p>
                     <div className='w-64 h-64 relative'>
-                      <img 
+                      <Image 
                         src={afterImageSrc}
                         alt='After'
                         className='w-full h-full object-cover rounded opacity-0 transition-opacity duration-300'

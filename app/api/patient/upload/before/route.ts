@@ -16,7 +16,7 @@ export async function POST(request: Request) {
     await client.setCurrentSpace(space.did());
     const file = formData.get('image') as File;
 
-    var description = formData.get('description') as string || null;
+    const description = formData.get('description') as string || null;
     // check if description is null
     if (description === null) {
       return new Response(
