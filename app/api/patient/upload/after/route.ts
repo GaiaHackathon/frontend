@@ -48,6 +48,7 @@ export async function POST(request: Request) {
       where: {
         imageid: Number(imageId),
         patientid: patient.patientid,
+        afterImageUploaded: false,
       },
       data: {
         afterImageCid: cid.toString(),
