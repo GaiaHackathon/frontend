@@ -146,7 +146,7 @@ export default function Upload() {
         }
 
         const updatedAgentData = await updatedAgentResp.json();
-        analysisText = updatedAgentData.message.content;
+        analysisText = updatedAgentData.message;
         setAnalysis(analysisText);
         if (!afterFile || !address) {
           alert("Missing required data for before image upload.");

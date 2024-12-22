@@ -9,6 +9,8 @@ export async function POST(request: Request) {
     const imageId = formData.get('imageId') as string;
     const analysis = formData.get('analysis') as string;
 
+  console.log('upload analysis called. Analysis: ', analysis);
+
     if (!baseaddress || !imageId || !analysis) {
       return new Response(
         JSON.stringify({ message: 'Missing required fields: baseaddress, imageId, and analysis are required.' }),
@@ -18,6 +20,7 @@ export async function POST(request: Request) {
         }
       );
     }
+
     // Validate analysis content
     if (analysis.length > 10000) { // adjust max length as needed
       return new Response(
@@ -29,16 +32,6 @@ export async function POST(request: Request) {
     if (analysis.length < 1) {
       return new Response(
         JSON.stringify({ message: 'Analysis content is required' }),
-        { status: 400, headers: { 'Content-Type': 'application/json' } }
-      );
-    }
-
-    try {
-      // Validate JSON structure if analysis is expected to be JSON
-      JSON.parse(analysis);
-    } catch {
-      return new Response(
-        JSON.stringify({ message: 'Invalid analysis format' }),
         { status: 400, headers: { 'Content-Type': 'application/json' } }
       );
     }
