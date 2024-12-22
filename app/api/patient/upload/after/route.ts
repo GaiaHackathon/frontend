@@ -16,14 +16,54 @@ export async function POST(request: Request) {
     await client.setCurrentSpace(space.did());
     const cid = await client.uploadFile(formData.get('image') as File);
 
+    // Get the patient ID from the baseaddress
+    const patient = await prisma.patient.findFirst({
+      where: {
+        baseaddress: formData.get('baseaddress') as string,
+      },
+    });
+
+    if (!patient) {
+      return new Response(
+        JSON.stringify({ message: 'Patient not found' }),
+        {
+          status: 404,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    const imageId = formData.get('imageId');
+    if (!imageId) {
+      return new Response(
+        JSON.stringify({ message: 'Image ID is required' }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
+    // check if image id is a number
+    if (isNaN(Number(imageId))) {
+      return new Response(
+        JSON.stringify({ message: 'Image ID is not a number' }),
+        {
+          status: 400,
+          headers: { 'Content-Type': 'application/json' },
+        }
+      );
+    }
+
     const createdImage = await prisma.image.update({
       where: {
-        imageid: Number(1),
+        imageid: Number(imageId),
+        patientid: patient.patientid,
+        afterImageUploaded: false,
       },
       data: {
         afterImageCid: cid.toString(),
-        afterImageUploaded: true,
-        patientid: 1,
+        afterImageUploaded: true
       },
     });
 

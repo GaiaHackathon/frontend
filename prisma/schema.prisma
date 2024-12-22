@@ -11,6 +11,8 @@ model Patient {
   patientid    Int     @id @default(autoincrement())
   baseaddress  String
   weight       Int
+  height       Float? @default(170.0)
+  fatPercentage Float?
   age          Int
   name         String
   sex          String
@@ -25,6 +27,8 @@ model Image {
   beforeImageCid String
   afterImageCid  String?
   afterImageUploaded Boolean @default(false)
+  description    String?
+  analysis      String?
   patientid      Int
   patient        Patient @relation(fields: [patientid], references: [patientid])
 }

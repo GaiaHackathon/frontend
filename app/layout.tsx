@@ -1,20 +1,17 @@
-import type { Metadata } from 'next';
-import './globals.css';
+// app/layout.tsx
+import './globals.css'
+import { Toaster } from 'sonner'
+import { WagmiClientProvider } from './WagmiClientProvider' // Adjust the import path as necessary
+import { ReactNode } from 'react'; // Import ReactNode
 
-export const metadata: Metadata = {
-  title: 'Gaia Hackathon',
-  description: 'Hackathon Project',
-};
-
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: ReactNode }) { // Type children as ReactNode
   return (
-    <html lang='en'>
+    <html lang="en" suppressHydrationWarning>
       <body className='bg-gradient-to-r from-blue-600 to-purple-800'>
-        {children}
+        <WagmiClientProvider>
+          <div>{children}</div>
+        </WagmiClientProvider>
+        <Toaster />
       </body>
     </html>
   );

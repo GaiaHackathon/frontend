@@ -1,37 +1,31 @@
-import OpenAI from 'openai';
-
-const openai = new OpenAI({
-  baseURL: 'https://openrouter.ai/api/v1',
-  apiKey: process.env.OPENROUTER_API_KEY,
-});
-
 export async function POST(req: Request) {
-  const data = await req.json();
-  const image_url = data.image_url;
-
-  const completion = await openai.chat.completions.create({
-    model: 'x-ai/grok-vision-beta',
-    messages: [
+  let data;
+  try {
+    data = await req.json();
+  } catch (error) {
+    return new Response(
+      JSON.stringify({ error: 'Invalid JSON in request body: ' + error }),
       {
-        role: 'user',
-        content: [
-          {
-            type: 'text',
-            text: 'Analyze the left and the right image for posture and spine alignement differences. Keep it short and concise.',
-          },
-          {
-            type: 'image_url',
-            image_url: {
-              url: image_url,
-            },
-          },
-        ],
-      },
-    ],
-  });
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
+  }
+
+  // Ensure `before_url` is present
+  if (!data.before_url) {
+    return new Response(
+      JSON.stringify({ error: 'Before image URL is required' }),
+      {
+        status: 400,
+        headers: { 'Content-Type': 'application/json' },
+      }
+    );
+  }
+ 
 
   return new Response(
-    JSON.stringify({ message: completion.choices[0].message }),
+    JSON.stringify({ message: "This is a placeholder message." }),
     {
       status: 200,
       headers: { 'Content-Type': 'application/json' },

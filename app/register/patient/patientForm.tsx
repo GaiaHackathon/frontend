@@ -23,25 +23,47 @@ import {
 import { useRouter } from 'next/navigation';
 import { useAccount } from 'wagmi';
 
+ const preprocessNumber = (parser: typeof Number.parseInt | typeof Number.parseFloat) => (value: unknown) => {
+   if (typeof value === 'string') {
+     const parsed = parser(value, 10);
+     return Number.isNaN(parsed) ? undefined : parsed;
+   }
+   return value;
+ };
+
 const formSchema = z.object({
   name: z
     .string()
     .min(1, { message: 'Name is required' })
     .max(100, { message: 'Name must be 100 characters or less' }),
-  age: z.preprocess((value) => {
-    if (typeof value === 'string') {
-      const parsed = parseInt(value, 10);
-      return isNaN(parsed) ? undefined : parsed;
-    }
-    return value;
-  }, z.number().int().min(0, { message: 'Age must be a positive number' }).max(120, { message: 'Age must be realistic' })),
-  weight: z.preprocess((value) => {
-    if (typeof value === 'string') {
-      const parsed = parseFloat(value);
-      return isNaN(parsed) ? undefined : parsed;
-    }
-    return value;
-  }, z.number().min(0, { message: 'Weight must be a positive number' })),
+  age: z.preprocess(
+    preprocessNumber(Number.parseInt),
+    z.number().int().min(0, { message: 'Age must be a positive number' }).max(120, { message: 'Age must be realistic' })
+  ),
+  weight: z.preprocess(
+    preprocessNumber(Number.parseFloat),
+    z.number().min(0, { message: 'Weight must be a positive number' })
+  ),
+  height: z.preprocess(
+    (value) => {
+      if (typeof value === 'string') {
+        const parsed = parseFloat(value);
+        return Number.isNaN(parsed) ? undefined : parsed;
+      }
+      return value;
+    },
+    z.number().min(0, { message: 'Height must be a positive number' })
+  ),
+  fatPercentage: z.preprocess(
+    (value) => {
+      if (typeof value === 'string') {
+        const parsed = parseFloat(value);
+        return Number.isNaN(parsed) ? undefined : parsed;
+      }
+      return value;
+    },
+    z.number().min(0, { message: 'Body fat percentage must be a positive number' }).max(100, { message: 'Body fat percentage must be less than 100' }).optional().nullable()
+  ),
   sex: z.preprocess(
     (value) => {
       if (typeof value === 'string') {
@@ -55,12 +77,18 @@ const formSchema = z.object({
   ),
 });
 
+
 export default function PatientRegistrationForm() {
   const { address } = useAccount();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       name: '',
+      age: 0,
+      weight: 0,
+      height: 0,
+      fatPercentage: null,
+      sex: 'other',
     },
   });
   const router = useRouter();
@@ -69,19 +97,27 @@ export default function PatientRegistrationForm() {
     try {
       const response = await fetch('/api/patient/register', {
         method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify({
           baseaddress: address,
           ...values,
+          height: values.height,
+          fatPercentage: values.fatPercentage,
           practitionerid: 1,
         }),
       });
 
-      if (response.status === 200) {
+      if (response.ok) {
         router.push('/patient');
+      } else {
+        const error = await response.json();
+        alert(error.message || 'Failed to register');
       }
     } catch (err) {
       console.error(err);
-      alert('Ran into issue check submission values');
+      alert('Failed to register. Please try again.');
     }
   }
 
@@ -142,6 +178,47 @@ export default function PatientRegistrationForm() {
                   className='text-white placeholder:text-gray-300'
                   placeholder='Enter weight in lbs'
                   {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name='height'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className='text-white text-base font-bold'>
+                Height (cm)
+              </FormLabel>
+              <FormControl>
+                <Input
+                  className='text-white placeholder:text-gray-300'
+                  placeholder='Enter height in cm'
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+
+        <FormField
+          control={form.control}
+          name='fatPercentage'
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel className='text-white text-base font-bold'>
+                Body Fat Percentage (optional)
+              </FormLabel>
+              <FormControl>
+                <Input
+                  className='text-white placeholder:text-gray-300'
+                  placeholder='Enter body fat percentage'
+                  {...field}
+                  value={field.value != null ? field.value.toString() : ''} // Ensure value is a string
                 />
               </FormControl>
               <FormMessage />
