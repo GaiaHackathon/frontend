@@ -1,11 +1,14 @@
 import prisma from '@/db';
+import { verifySignature } from '@/lib/authUtils';
 
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const baseaddress = searchParams.get('baseaddress');
+    const signature = searchParams.get('signature');
+    const message = searchParams.get('message');
 
-    if (!baseaddress) {
+    if (!baseaddress || !signature) {
       return new Response(
         JSON.stringify({ message: 'Wallet address is required' }),
         {
@@ -14,6 +17,7 @@ export async function GET(request: Request) {
         }
       );
     }
+    const verified = await verifySignature(signature, message);
 
     const patient = await prisma.patient.findFirst({
       where: {
